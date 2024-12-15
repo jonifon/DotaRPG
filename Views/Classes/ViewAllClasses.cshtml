@@ -47,13 +47,13 @@
 </div>
 
 
-<form method="get" action="@Url.Action("ViewAllClasses", "Classes")" class="mb-3">
-    <div class="input-group">
-        <input type="text" class="form-control" name="searchName" placeholder="Введите имя для фильтрации" value="@ViewData["SearchName"]" />
-        <button type="submit" class="btn btn-primary">Поиск</button>
-        <a href="@Url.Action("ViewAllClasses", "Classes")" class="btn btn-secondary">Сброс</a>
-    </div>
-</form>
+@* <form method="get" action="@Url.Action("ViewAllClasses", "Classes")" class="mb-3"> *@
+@*     <div class="input-group"> *@
+@*         <input type="text" class="form-control" name="searchName" placeholder="Введите имя для фильтрации" value="@ViewData["SearchName"]" /> *@
+@*         <button type="submit" class="btn btn-primary">Поиск</button> *@
+@*         <a href="@Url.Action("ViewAllClasses", "Classes")" class="btn btn-secondary">Сброс</a> *@
+@*     </div> *@
+@* </form> *@
 
 
 <table class="table">
@@ -77,10 +77,59 @@
                 <td>@query.BaseDamage</td>
                 <td>@query.BaseHealth</td>
                 <td>
-                    <a href="#" class="btn btn-primary">Изменить</a>
+                    <button class="btn btn-primary edit-class-btn"
+                            data-id="@query.Id"
+                            data-name="@query.Name"
+                            data-description="@query.Description"
+                            data-basedamage="@query.BaseDamage"
+                            data-basehealth="@query.BaseHealth">
+                        Изменить
+                    </button>
                     <button class="btn btn-danger" onclick="deleteRow(@query.Id, 'class')">Удалить</button>
                 </td>
+
+
             </tr>
         }
     </tbody>
 </table>
+
+<div class="modal fade" id="editCharacterClassModal" tabindex="-1" aria-labelledby="editCharacterClassModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCharacterClassModalLabel">Редактирование класса персонажа</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCharacterClassForm">
+                    <input type="hidden" id="editClassId" name="Id" />
+                    <div class="mb-3">
+                        <label for="editClassName" class="form-label">Название класса</label>
+                        <input type="text" class="form-control" id="editClassName" name="Name" required maxlength="500">
+                        <div class="invalid-feedback" id="editClassNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editClassDescription" class="form-label">Описание класса</label>
+                        <textarea class="form-control" id="editClassDescription" name="Description" required maxlength="500"></textarea>
+                        <div class="invalid-feedback" id="editClassDescriptionError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editBaseDamage" class="form-label">Базовый урон</label>
+                        <input type="number" class="form-control" id="editBaseDamage" name="BaseDamage" required min="0" max="100">
+                        <div class="invalid-feedback" id="editBaseDamageError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editBaseHealth" class="form-label">Базовое здоровье</label>
+                        <input type="number" class="form-control" id="editBaseHealth" name="BaseHealth" required min="1">
+                        <div class="invalid-feedback" id="editBaseHealthError"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="updateCharacterClassBtn">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>

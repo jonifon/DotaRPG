@@ -12,7 +12,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCharacterClassModalLabel">Добавление класса персонажа</h5>
+                <h5 class="modal-title" id="addCharacterClassModalLabel">Добавление персонажа</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -51,10 +51,16 @@
 <form method="get" action="@Url.Action("ViewAllCharacters", "Character")" class="mb-3">
     <div class="input-group">
         <input type="text" class="form-control" name="searchName" placeholder="Введите имя для фильтрации" value="@ViewData["SearchName"]" />
+    </div>
+    <div class="input-group">
+        <input type="text" class="form-control" name="searchCharacterClass" placeholder="Введите класс для фильтрации" value="@ViewData["SearchCharacterClass"]" />
+    </div>
+    <div class="d-flex justify-content-center">
         <button type="submit" class="btn btn-primary">Поиск</button>
         <a href="@Url.Action("ViewAllCharacters", "Character")" class="btn btn-secondary">Сброс</a>
     </div>
 </form>
+
 
 <table class="table">
     <thead>
@@ -77,10 +83,59 @@
                 <td>@query.Experience</td>
                 <td>@query.Class.Name</td>
                 <td>
-                    <a href="#" class="btn btn-primary">Изменить</a>
+                    <button class="btn btn-primary edit-character-btn"
+                            data-id="@query.Id"
+                            data-name="@query.Name"
+                            data-level="@query.Level"
+                            data-experience="@query.Experience"
+                            data-class-id="@query.ClassId">
+                        Изменить
+                    </button>
                     <button class="btn btn-danger" onclick="deleteRow(@query.Id, 'character')">Удалить</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="modal fade" id="EditCharacterModal" tabindex="-1" aria-labelledby="EditCharacterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditCharacterModalLabel">Редактирование персонажа</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="characterForm">
+                    <input type="hidden" id="editCharacterId" name="Id" />
+                    <div class="mb-3">
+                        <label for="characterName" class="form-label">Название персонажа</label>
+                        <input type="text" class="form-control" id="EditCharacterName" name="Name" required maxlength="500">
+                        <div class="invalid-feedback" id="characterNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="characterLevel" class="form-label">Уровень персонажа</label>
+                        <input type="number" class="form-control" id="EditCharacterLevel" name="CharacterLevel" required min="0" max="100">
+                        <div class="invalid-feedback" id="characterLevelError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="characterExperience" class="form-label">Опыт персонажа</label>
+                        <input type="number" class="form-control" id="EditCharacterExperience" name="CharacterExperience" required min="1">                        <div class="invalid-feedback" id="characterExperienceError"></div>
+                    </div>
+
+                    <select class="form-select" id="EditCharacterClass" name="ClassId" required>
+                        <option value="">Выберите класс</option>
+                        @foreach (var characterClass in Model.CharacterClasses)
+                        {
+                            <option value="@characterClass.Key">@characterClass.Value</option>
+                        }
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="updateCharacterBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>

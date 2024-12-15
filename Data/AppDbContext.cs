@@ -7,6 +7,7 @@ namespace DotaRPG.Data
 	{
 		public DbSet<CharacterClass> CharacterClasses { get; set; }
 		public DbSet<Character> Characters { get; set; }
+		public DbSet<ChangeHistory> ChangeHistories { get; set; }
 
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -15,6 +16,7 @@ namespace DotaRPG.Data
 			// Называть таблички во множественном числе как бы кринжик
 			modelBuilder.Entity<CharacterClass>().ToTable("CharacterClass");
 			modelBuilder.Entity<Character>().ToTable("Character");
+			modelBuilder.Entity<ChangeHistory>().ToTable("ChangeHistory");
 		}
 	}
 }

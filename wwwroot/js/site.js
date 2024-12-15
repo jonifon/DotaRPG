@@ -164,4 +164,107 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    $(document).on('click', '.edit-class-btn', function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const description = $(this).data('description');
+        const baseDamage = $(this).data('basedamage');
+        const baseHealth = $(this).data('basehealth');
+
+        $('#editClassId').val(id);
+        $('#editClassName').val(name);
+        $('#editClassDescription').val(description);
+        $('#editBaseDamage').val(baseDamage);
+        $('#editBaseHealth').val(baseHealth);
+
+        $('#editCharacterClassModal').modal('show');
+    });
+
+    $('#updateCharacterClassBtn').on('click', function () {
+        const characterClass = {
+            Id: $('#editClassId').val(),
+            Name: $('#editClassName').val(),
+            Description: $('#editClassDescription').val(),
+            BaseDamage: $('#editBaseDamage').val(),
+            BaseHealth: $('#editBaseHealth').val()
+        };
+
+        $.ajax({
+            url: '/Classes/Edit',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(characterClass),
+            success: function (response) {
+                if (response.success) {
+                    const row = $(`#class-row-${characterClass.Id}`);
+                    row.find('td:nth-child(2)').text(characterClass.Name);
+                    row.find('td:nth-child(3)').text(characterClass.Description);
+                    row.find('td:nth-child(4)').text(characterClass.BaseDamage);
+                    row.find('td:nth-child(5)').text(characterClass.BaseHealth);
+
+                    $('#editCharacterClassModal').modal('hide');
+                } else {
+                    alert('Ошибка: ' + (response.error || 'неизвестная ошибка'));
+                }
+            },
+            error: function () {
+                alert('Произошла ошибка при редактировании класса персонажа');
+            }
+        });
+    });
+
+    $(document).on('click', '.edit-character-btn', function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const level = $(this).data('level');
+        const experience = $(this).data('experience');
+        const class_id = $(this).data('class-id');
+
+        $('#editCharacterId').val(id);
+        $('#EditCharacterName').val(name);
+        $('#EditCharacterLevel').val(level);
+        $('#EditCharacterExperience').val(experience);
+        $('#EditCharacterClass').val(class_id);
+
+        $('#EditCharacterModal').modal('show');
+    });
+
+    $('#updateCharacterBtn').on('click', function () {
+        const character = {
+            Id: $('#editCharacterId').val(),
+            Name: $('#EditCharacterName').val(),
+            Level: $('#EditCharacterLevel').val(),
+            Experience: $('#EditCharacterExperience').val(),
+            ClassId: $('#EditCharacterClass').val()
+        };
+
+        console.log(character);
+
+        $.ajax({
+            url: '/Character/Edit',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(character),
+            success: function (response) {
+                if (response.success) {
+                    const row = $(`#class-row-${character.Id}`);
+                    row.find('td:nth-child(2)').text(character.Name);
+                    row.find('td:nth-child(3)').text(character.Level);
+                    row.find('td:nth-child(4)').text(character.Experience);
+
+                    // доделаю потом, надо сделать получение названия класса по id
+                    //row.find('td:nth-child(5)').text(character.ClassId);
+
+                    $('#EditCharacterModal').modal('hide');
+                } else {
+                    alert('Ошибка: ' + (response.error || 'неизвестная ошибка'));
+                }
+            },
+            error: function () {
+                alert('Произошла ошибка при редактировании класса персонажа');
+            }
+        });
+    });
 });
