@@ -1,0 +1,86 @@
+﻿@model AllCharactersViewModel
+@{
+    ViewData["Title"] = "Просмотр классов";
+}
+
+
+<button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addCharacterModal">
+    Добавить персонажа
+</button>
+
+<div class="modal fade" id="addCharacterModal" tabindex="-1" aria-labelledby="addCharacterClassModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCharacterClassModalLabel">Добавление класса персонажа</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="characterForm">
+                    <div class="mb-3">
+                        <label for="characterName" class="form-label">Название персонажа</label>
+                        <input type="text" class="form-control" id="characterName" name="Name" required maxlength="500">
+                        <div class="invalid-feedback" id="characterNameError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="characterLevel" class="form-label">Уровень персонажа</label>
+                        <input type="number" class="form-control" id="characterLevel" name="CharacterLevel" required min="0" max="100">
+                        <div class="invalid-feedback" id="characterLevelError"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="characterExperience" class="form-label">Опыт персонажа</label>
+                        <input type="number" class="form-control" id="characterExperience" name="CharacterExperience" required min="1">                        <div class="invalid-feedback" id="characterExperienceError"></div>
+                    </div>
+
+                    <select class="form-select" id="characterClass" name="ClassId" required>
+                        <option value="">Выберите класс</option>
+						@foreach (var characterClass in Model.CharacterClasses) {
+							<option value="@characterClass.Key">@characterClass.Value</option>
+                        }
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="saveCharacterBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="get" action="@Url.Action("ViewAllCharacters", "Character")" class="mb-3">
+    <div class="input-group">
+        <input type="text" class="form-control" name="searchName" placeholder="Введите имя для фильтрации" value="@ViewData["SearchName"]" />
+        <button type="submit" class="btn btn-primary">Поиск</button>
+        <a href="@Url.Action("ViewAllCharacters", "Character")" class="btn btn-secondary">Сброс</a>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Название</th>
+            <th scope="col">Уровень</th>
+            <th scope="col">Опыт</th>
+            <th scope="col">Название класса</th>
+            <th scope="col">Управление</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var query in Model.Characters)
+        {
+            <tr id="class-row-@query.Id">
+                <th scope="row">@query.Id</th>
+                <td>@query.Name</td>
+                <td>@query.Level</td>
+                <td>@query.Experience</td>
+                <td>@query.Class.Name</td>
+                <td>
+                    <a href="#" class="btn btn-primary">Изменить</a>
+                    <button class="btn btn-danger" onclick="deleteRow(@query.Id, 'character')">Удалить</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
