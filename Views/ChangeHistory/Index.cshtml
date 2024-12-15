@@ -1,0 +1,34 @@
+﻿@model ChangeHistoryViewModel
+@{
+    ViewData["Title"] = "История изменений";
+}
+
+<h1>История изменений</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Дата изменения</th>
+            <th>Сущность</th>
+            <th>Идентификатор сущности</th>
+            <th>Тип изменения</th>
+            <th>Измененное свойство</th>
+            <th>Старое значение</th>
+            <th>Новое значение</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in Model.changeHistories)
+        {
+            <tr>
+                <td>@history.ChangeDate</td>
+                <td>@history.EntityName</td>
+                <td>@history.EntityId</td>
+                <td>@history.ChangeType</td>
+                <td>@history.PropertyName</td>
+                <td>@history.OldValue</td>
+                <td>@history.NewValue</td>
+            </tr>
+        }
+    </tbody>
+</table>
